@@ -1,0 +1,27 @@
+{
+  "name": "apinode",
+  "version": "1.0.0",
+  "description": "Api Node js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jdnf13/apiNode.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jdnf13/apiNode/issues"
+  },
+  "homepage": "https://github.com/jdnf13/apiNode#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "mongoose": "^6.4.0",
+    "morgan": "^1.10.0",
+    "underscore": "^1.13.4"
+  }
+}
