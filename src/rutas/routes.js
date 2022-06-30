@@ -38,20 +38,31 @@ router.post('/insert', async (req,res) => {
     }
 });
 router.delete('/delete', async (req,res) => {
-    console.log('recibiendo data ',req.body);
+    let id = req.params._id;
+    Portafolio.findById(id,(err,product) => {
+        if(err) res.status(500).send({"mensaje":"registro no se encuentra"});
+
+        Portafolio.remove(id,(err) => {
+            if(err) res.status(500).send({"mensaje":"registro no eliminado"});
+            res.status(200).send({"mensaje":"registro eliminado"});
+        });
+        
+
+    });
+    /*console.log('recibiendo data ',req.body);
     const {_id} = req.body;
     const exist = await Portafolio.findOne({_id});
-
+    console.log('exist:',exist._id,_id)
     if(exist){
         try {
-            Portafolio.deleteOne({_id:_id});
+            Portafolio.deleteOne({_id:exist._id});
             res.json({"mensaje":"registro eliminado"});
         } catch (error) {
             console.log('Error obteniendo data',error);
         }
     }else{
         res.json({"mensaje":"registro no existe"});
-    }
+    }*/
 });
 router.put('/actualizar', async (req,res) => {
     try {
