@@ -16,27 +16,34 @@ router.get('/productos-get', async (req,res) => {
 
 /**AGREGAR UN PRODUCTO NUEVO*/
 router.post('/insert', async (req,res) => {
-    const {producto,valor} = req.body;
+    const {codigo,producto,linea,valor,descuento} = req.body;
     const _id = Math.random(); 
     const exist = await Portafolio.findOne({_id});
-    const exist_producto = await Portafolio.findOne({producto});
+    const exist_producto = await Portafolio.findOne({producto:producto,codigo:codigo});
 
     if(exist || exist_producto){
         res.status(500).json({"mensaje":"el registro ya fue almacenado anteriormente","data":exist});
     }else{
-        try {
-            Portafolio.insertMany([
-                {
-                    _id:_id,
-                    "producto":producto,
-                    "valor":valor
-                },
-            ],{w:"majority",wtimeout:100});
-            res.status(200).json({"mensaje":"registro almacenado con exito",
-                                  "data":[{_id:_id,"producto":producto,"valor":valor}]});
-        } catch (error) {
-            res.status(500).json({"mensaje":error,"data":null});
-        }  
+        if(codigo && producto && linea && valor && descuento){
+            try {
+                Portafolio.insertMany([
+                    {
+                        _id:_id,
+                        codigo:codigo,
+                        producto:producto,
+                        linea:linea,
+                        valor:valor,
+                        descuento:descuento,
+                    },
+                ],{w:"majority",wtimeout:100});
+                res.status(200).json({"mensaje":"registro almacenado con exito",
+                                      "data":[{_id:_id,"producto":producto,"valor":valor}]});
+            } catch (error) {
+                res.status(500).json({"mensaje":error,"data":null});
+            } 
+        }else{
+            res.status(500).json({"mensaje":"Todos los campos son requeridos","data":null});
+        }
     }
 });
 
@@ -60,9 +67,9 @@ router.delete('/delete', (req,res) => {
 router.put('/actualizar', async (req,res) => {
     try {
         
-        const {_id,producto,valor} = req.body;
-        if(producto && valor && _id){
-            const exist = await Portafolio.findOne({producto});
+        const {_id,codigo,producto,linea,valor,descuento} = req.body;
+        if(codigo && producto && linea && valor && descuento){
+            const exist = await Portafolio.findOne({_id:_id});
             if(exist && exist._id !== _id){
                 return res.status(500).json({"mensaje":"el registro no existe","data":[{_id:_id,"producto":producto,"valor":valor}]});
             }
@@ -70,8 +77,11 @@ router.put('/actualizar', async (req,res) => {
                 {_id:_id},
                 {
                     $set: {
-                    producto: producto,
-                    valor: valor
+                        codigo:codigo,
+                        producto:producto,
+                        linea:linea,
+                        valor:valor,
+                        descuento:descuento
                     }
                 });
             return res.status(200).json({"mensaje":"el registro se actualizo","data":[{_id:_id,"producto":producto,"valor":valor}]});

@@ -1,9 +1,12 @@
 const mongoose = require ('mongoose');
 
 const dataSchema = mongoose.model('Producto', {
-    _id:{type:Number},
-    producto: { type: String },
-    valor: { type: String }
+    _id:        {type:  Number},
+    codigo:     {type:  String},    
+    producto:   {type:  String},
+    linea:      {type:  String},
+    valor:      {type:  Number},
+    descuento:  {type:  Number}
 });  
 
 // asigno modelo
