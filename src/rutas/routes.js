@@ -15,8 +15,7 @@ router.get('/productos-get', async (req,res) => {
 router.post('/insert', async (req,res) => {
     console.log('recibiendo data ',req.body);
     const {producto,valor} = req.body;
-    const arrayPortafolio = await Portafolio.find();
-    const _id = arrayPortafolio.length + 1; 
+    const _id = Math.random(); 
     const exist = await Portafolio.findOne({_id});
     const exist_producto = await Portafolio.findOne({producto});
 
@@ -31,14 +30,15 @@ router.post('/insert', async (req,res) => {
                     "valor":valor
                 },
             ],{w:"majority",wtimeout:100});
-            res.status(200).json({"mensaje":"registro almacenado"});
+            res.status(200).json({"mensaje":"registro almacenado con exito"});
+            console.log('registro almacenado con exito--> ',_id,' - ',producto,' - ',valor);
         } catch (error) {
             console.log('Error obteniendo data',error);
         }  
     }
 });
 router.delete('/delete', async (req,res) => {
-    let id = req.params._id;
+    /*let id = req.params._id;
     Portafolio.findById(id,(err,product) => {
         if(err) res.status(500).send({"mensaje":"registro no se encuentra"});
 
@@ -48,8 +48,8 @@ router.delete('/delete', async (req,res) => {
         });
         
 
-    });
-    /*console.log('recibiendo data ',req.body);
+    });*/
+    console.log('recibiendo data ',req.body);
     const {_id} = req.body;
     const exist = await Portafolio.findOne({_id});
     console.log('exist:',exist._id,_id)
@@ -62,7 +62,7 @@ router.delete('/delete', async (req,res) => {
         }
     }else{
         res.json({"mensaje":"registro no existe"});
-    }*/
+    }
 });
 router.put('/actualizar', async (req,res) => {
     try {
