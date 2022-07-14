@@ -1,4 +1,5 @@
 const {Router} = require('express');
+const mongoose = require ('mongoose');
 const router = Router();
 const Portafolio  = require('../models/portafolio');
 //rutas de acceso
@@ -37,32 +38,24 @@ router.post('/insert', async (req,res) => {
         }  
     }
 });
-router.delete('/delete', async (req,res) => {
-    /*let id = req.params._id;
-    Portafolio.findById(id,(err,product) => {
-        if(err) res.status(500).send({"mensaje":"registro no se encuentra"});
 
-        Portafolio.remove(id,(err) => {
-            if(err) res.status(500).send({"mensaje":"registro no eliminado"});
-            res.status(200).send({"mensaje":"registro eliminado"});
-        });
-        
+//Modelo para el DELETE solamente
+const Producto = mongoose.model('Producto', {
+    _id:{type:Number},
+    producto: { type: String },
+    valor: { type: String }
+});   
 
-    });*/
-    console.log('recibiendo data ',req.body);
-    const {_id} = req.body;
-    const exist = await Portafolio.findOne({_id});
-    console.log('exist:',exist._id,_id)
-    if(exist){
-        try {
-            Portafolio.deleteOne({_id:exist._id});
-            res.json({"mensaje":"registro eliminado"});
-        } catch (error) {
-            console.log('Error obteniendo data',error);
+router.delete('/delete', (req,res) => {
+    let _id = req.body._id;   
+
+    Producto.findByIdAndDelete(_id, function (err, docs) {
+        if (err){
+            return res.status(500).json({"mensaje":"el registro no se elimino correctamente"})        }
+        else{
+            return res.status(200).json({"mensaje":"el registro se elimino correctamente","documento":docs})
         }
-    }else{
-        res.json({"mensaje":"registro no existe"});
-    }
+    });
 });
 router.put('/actualizar', async (req,res) => {
     try {
