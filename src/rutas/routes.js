@@ -16,7 +16,7 @@ router.get('/productos-get', async (req,res) => {
 
 /**AGREGAR UN PRODUCTO NUEVO*/
 router.post('/insert', async (req,res) => {
-    const {codigo,producto,linea,valor,descuento} = req.body;
+    const {codigo,producto,detalle,linea,valor,descuento,promocion} = req.body;
     const _id = Math.random(); 
     const exist = await Portafolio.findOne({_id});
     const exist_producto = await Portafolio.findOne({producto:producto,codigo:codigo});
@@ -31,9 +31,11 @@ router.post('/insert', async (req,res) => {
                         _id:_id,
                         codigo:codigo,
                         producto:producto,
+                        detalle:detalle,
                         linea:linea,
                         valor:valor,
                         descuento:descuento,
+                        promocion:promocion,
                     },
                 ],{w:"majority",wtimeout:100});
                 res.status(200).json({"mensaje":"registro almacenado con exito",
@@ -65,30 +67,36 @@ router.delete('/delete', (req,res) => {
 
 /**MODIFICAR UN PRODUCTO*/
 router.put('/actualizar', async (req,res) => {
+    const {_id,codigo,producto,detalle,linea,valor,descuento,promocion} = req.body;
     try {
-        
-        const {_id,codigo,producto,linea,valor,descuento} = req.body;
+        console.log('data enviada desde api --',req.body)
         if(codigo && producto && linea && valor && descuento){
+            console.log('data recibida --',req.body)
             const exist = await Portafolio.findOne({_id:_id});
             if(exist && exist._id !== _id){
+                console.log('error 1');
                 return res.status(500).json({"mensaje":"el registro no existe","data":[{_id:_id,"producto":producto,"valor":valor}]});
             }
             const insert = await Portafolio.updateOne(
                 {_id:_id},
                 {
                     $set: {
+                        _id:_id,
                         codigo:codigo,
                         producto:producto,
+                        detalle:detalle,
                         linea:linea,
                         valor:valor,
-                        descuento:descuento
+                        descuento:descuento,
+                        promocion:promocion,
                     }
                 });
             return res.status(200).json({"mensaje":"el registro se actualizo","data":[{_id:_id,"producto":producto,"valor":valor}]});
-        }
-        return res.status(500).json({"mensaje":"datos requeridos","data":[{_id:_id,"producto":producto,"valor":valor}]});
+        }else
+            return res.status(500).json({"mensaje":"datos requeridos","data":[{_id:_id,"producto":producto,"valor":valor}]});
 
     } catch (error) {
+        console.log('error 3');
         return res.status(500).json({"mensaje":"Error interno","data":null});
     }
 });
