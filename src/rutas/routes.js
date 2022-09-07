@@ -1,8 +1,43 @@
-const {Router} = require('express');
-const router = Router();
-const Portafolio  = require('../models/portafolio');
+const {Router}      =   require('express');
+const router        =   Router();
+const Portafolio    =   require('../models/portafolio');
+const Users         =   require('../models/users');
 
 //rutas de acceso
+
+/**LOGIN USER */
+
+router.post('/login', async (req,res) => {
+
+    const {email,password} = req.body;
+            
+        try {
+            const arrayLogin = await Users.find();
+            let isLogin = false;
+            let data = []
+            if(arrayLogin){
+                arrayLogin.map(item =>{
+                    if(item.mail === email && item.password === password){
+                        isLogin = true;
+                        data.push(item);
+                    }
+                });
+            }
+
+            console.log('is login?   ',isLogin);
+            if(isLogin === true){
+                res.status(200).json({"data":data[0],"mensaje":"Login Exitoso"});
+            }else{
+                res.status(500).json({"data":{'login':'fallido'},"mensaje":"Datos incorrectos"});
+            }
+        } catch (error) {            
+            console.log(error);
+            res.status(500).json({"mensaje":error,"data":{'mensaje':'Error en los datos suministrados'}});
+        } 
+    
+   
+});
+
 /**TRAER TODOS LOS PRODUCTOS*/
 router.get('/productos-get', async (req,res) => {
     try {
