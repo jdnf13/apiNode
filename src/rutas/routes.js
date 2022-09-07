@@ -26,7 +26,7 @@ router.post('/login', async (req,res) => {
 
             console.log('is login?   ',isLogin);
             if(isLogin === true){
-                res.status(200).json({"data":data[0],"mensaje":"Login Exitoso"});
+                res.status(200).json({"data":data[0],"mensaje":"Login Exitoso","estado_p":200});
             }else{
                 res.status(500).json({"data":{'login':'fallido'},"mensaje":"Datos incorrectos"});
             }
