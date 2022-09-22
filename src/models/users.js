@@ -6,7 +6,10 @@ const dataSchema = mongoose.model('Users', {
     lastname:   {type:  String},
     mail:       {type:  String},
     rol:        {type:  String},
-    password:   {type:  String}
+    password:   {type:  String},
+    phone:      {type:  String},
+    address:    {type:  String},
+    city:       {type:  String}
 });  
 
 // asigno modelo

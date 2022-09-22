@@ -38,6 +38,45 @@ router.post('/login', async (req,res) => {
    
 });
 
+
+router.post('/register', async (req,res) => {
+
+    const {email,password,address,city,lastname,name,phone} = req.body;
+            
+    const _id = Math.random(); 
+    const exist_user = await Users.findOne({mail:email});
+
+    if(exist_user){
+        res.status(500).json({"mensaje":"el usuario ya se registro anteriormente","data":null});
+    }else{
+        if(email && password && address && city && lastname && name && phone){
+            try {
+                Users.insertMany([
+                    {
+                        _id:_id,
+                        mail:email,
+                        password:password,
+                        address:address,
+                        city:city,
+                        lastname:lastname,
+                        name:name,
+                        phone:phone,
+                    },
+                ],{w:"majority",wtimeout:100});
+                res.status(200).json({"mensaje":"Usuario registrado con exito",
+                                      "data":[{_id:_id,"name":name,"email":email}]});
+            } catch (error) {
+                res.status(500).json({"mensaje":error,"data":{_id:_id}});
+            } 
+        }else{
+            res.status(500).json({"mensaje":"Todos los campos son requeridos","data":null});
+        }
+    }
+    
+   
+});
+
+
 /**TRAER TODOS LOS PRODUCTOS*/
 router.get('/productos-get', async (req,res) => {
     try {
